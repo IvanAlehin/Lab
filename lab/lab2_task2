@@ -1,0 +1,85 @@
+import os
+import shutil
+import csv
+from typing import List
+
+def get_absolute_path2(name: str) -> List[str]:
+    """
+    Данная функция возвращает список абсолютных путей для всех изображений определенного имени животного,
+    переданного в функцию, после перемещения изображений в другую директорию
+    """
+    absolute_path = os.path.abspath('dataset2')
+    image_names = os.listdir(absolute_path)
+
+    image_class_names = [name_img for name_img in image_names if name in name_img]
+
+    image_absolute_paths = list(
+        map(lambda name: os.path.join(absolute_path, name), image_class_names))
+    return image_absolute_paths
+
+
+def get_relative_path2(name: str) -> List[str]:
+    """
+    Данная функция возвращает список относительных путей для всех изображений определенного имени животного, 
+    переданного в функцию, после перемещения изображений в другую директорию
+    """
+    relative_path = os.path.relpath('dataset2')
+    image_names = os.listdir(relative_path)
+
+    image_class_names = [name_img for name_img in image_names if name in name_img]
+
+    image_relative_paths = list(
+        map(lambda name: os.path.join(relative_path, name), image_class_names))
+    return image_relative_paths
+
+
+def replace_images(name: str) -> None:
+    """
+    Данная функция изменяет имена изображений, объединяя номер изображения и класс в формате class_number.jpg, 
+    переносит изображения в директорию dataset2 и удаляет папку, где хранились изображения класса
+    """
+    relative_path = os.path.relpath('dataset2')
+    class_path = os.path.join(relative_path, name)
+    image_names = os.listdir(class_path)
+
+    image_relative_paths = list(map(lambda img: os.path.join(class_path, img), image_names))
+    new_img_relative_paths = list(map(lambda img: os.path.join(relative_path, f'{name}_{img}'), image_names))
+
+    for old_name, new_name in zip(image_relative_paths, new_img_relative_paths):
+        os.replace(old_name, new_name)
+
+    os.chdir('dataset2')
+    if os.path.isdir(name):
+        os.rmdir(name)
+    os.chdir('..')
+
+
+def main() -> None:
+    cat='cat'
+    dog='dog'
+    if os.path.isdir('dataset2'):
+        shutil.rmtree('dataset2')
+    old = os.path.relpath('dataset')
+    new = os.path.relpath('dataset2')
+    shutil.copytree(old, new)
+
+    replace_images(cat)
+    replace_images(dog) 
+    
+    cat_absolute_paths = get_absolute_path2(cat)
+    cat_relative_paths = get_relative_path2(cat)
+    dog_absolute_paths = get_absolute_path2(dog)
+    dog_relative_paths = get_relative_path2(dog)
+
+    with open('annotation.csv', 'w') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',', lineterminator='\r')
+
+        for absolute_path, relative_path in zip(cat_absolute_paths, cat_relative_paths):
+            writer.writerow([absolute_path, relative_path, cat])
+
+        for absolute_path, relative_path in zip(dog_absolute_paths, dog_relative_paths):
+            writer.writerow([absolute_path, relative_path, dog])
+
+
+if __name__ == "__main__":
+    main()

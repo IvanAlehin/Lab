@@ -74,7 +74,6 @@ def main():
 
 
 def get_absolute_path(name):
-  
     name_absolute_path=os.path.abspath(f"dataset/{name}")
     image_names = os.listdir(name_absolute_path)
 
@@ -83,12 +82,14 @@ def get_absolute_path(name):
     return image_absolute_paths
 
 def get_relative_path(name):
-    name_absolute_path=os.path.relpath(f"dataset/{name}")
-    image_names = os.listdir(name_absolute_path)
+    name_relative_path=os.path.relpath(f"dataset/{name}")
+    image_names = os.listdir(name_relative_path)
 
-    image_absolute_paths = list(map(lambda img: os.path.join(name_absolute_path, img), image_names))
+    image_relative_paths = list(map(lambda img: os.path.join(name_relative_path, img), image_names))
 
-    return image_absolute_paths
+    return image_relative_paths
+
+
 
 if __name__ == "__main__":
     cat='cat'

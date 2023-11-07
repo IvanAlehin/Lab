@@ -71,7 +71,7 @@ def main() -> None:
     dog_absolute_paths = get_absolute_path2(dog)
     dog_relative_paths = get_relative_path2(dog)
 
-    with open('annotation.csv', 'w') as csv_file:
+    with open('annotation2.csv', 'w') as csv_file:
         writer = csv.writer(csv_file, delimiter=',', lineterminator='\r')
 
         for absolute_path, relative_path in zip(cat_absolute_paths, cat_relative_paths):

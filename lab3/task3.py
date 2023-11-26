@@ -3,7 +3,7 @@ import shutil
 import csv
 import random
 
-random_numbers = random.sample(range(0, 10001), len(os.listdir(os.path.relpath('dataset2'))))
+random_numbers = random.sample(range(0, 10001), 2391)
 new_names = [f'{number}.jpg' for number in random_numbers]
     
 

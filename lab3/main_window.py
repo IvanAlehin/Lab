@@ -19,6 +19,8 @@ class Window(QMainWindow):
         super().__init__()
         self.initUI()
         self.initIterators()
+        self.createActions()
+        self.createMenuBar()
         self.setGeometry(450, 200, 1000, 700)
 
     def initUI(self) -> None:
@@ -51,6 +53,7 @@ class Window(QMainWindow):
         cat_btn.clicked.connect(self.nextCat)
         dog_btn.clicked.connect(self.nextDog)
 
+        self.folderpath = ' '
 
         self.show()
 
@@ -93,6 +96,95 @@ class Window(QMainWindow):
             self.initIterators()
             self.nextDog()
 
+
+    def createMenuBar(self) -> None:
+        """
+        Создание строки меню
+        Данная функция создает меню и добавляет к нему действия
+        """
+        menuBar = self.menuBar()
+
+        self.fileMenu = menuBar.addMenu('&File')
+        self.fileMenu.addAction(self.exitAction)
+        self.fileMenu.addAction(self.changeAction)
+
+        self.annotMenu = menuBar.addMenu('&Annotation')
+        self.annotMenu.addAction(self.createAnnotAction)
+
+        self.dataMenu = menuBar.addMenu('&Dataset')
+        self.dataMenu.addAction(self.createData2Action)
+
+
+    def createActions(self) -> None:
+        """
+        Создание действий, связанных с меню
+        Данная функция создает действия и связывает их с методами класса или другими функциями
+        """
+        self.exitAction = QAction('&Exit')
+        self.exitAction.triggered.connect(qApp.quit)
+
+        self.changeAction = QAction('&Change dataset')
+        self.changeAction.triggered.connect(self.changeDataset)
+
+        self.createAnnotAction = QAction('&Create annotation for current dataset')
+        self.createAnnotAction.triggered.connect(self.createAnnotation)
+
+        self.createData2Action = QAction('&Create dataset2')
+        self.createData2Action.triggered.connect(self.createDataset2)
+
+        self.createData3Action = QAction('&Create dataset3')
+        self.createData3Action.triggered.connect(self.createDataset3)
+
+    def createAnnotation(self) -> None:
+        """
+        Данная функция создает аннотацию для текущего датасета
+        """
+        if 'dataset2' in str(self.folderpath):
+            make_annotation2()
+        elif 'dataset3' in str(self.folderpath):
+            make_annotation3()
+        elif 'dataset' in str(self.folderpath):
+            make_annotation()
+
+    def createDataset2(self) -> None:
+        """
+        Создание датасета №2
+        Данная функция создает новый датасет, соединяя имя класса с порядковым номером
+        """
+        make_dataset2()
+        self.dataMenu.addAction(self.createData3Action)
+
+    def createDataset3(self) -> None:
+        """
+        Создание датасета №3
+        Данная функция создает новый датасет с рандомными числами
+        """
+        make_dataset3()
+
+    def changeDataset(self) -> None:
+        """
+        Изменение датасета
+        Данная функция изменяет текущий датасет
+        """
+
+        reply = QMessageBox.question(self, 'Warning', f'Are you sure you want to change current dataset?\nCurrent dataset: {str(self.folderpath)}',
+                                     QMessageBox.Yes | QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            self.folderpath = QFileDialog.getExistingDirectory(self, 'Select Folder')
+        else:
+            pass
+
+    def closeEvent(self, event: QEvent) -> None:
+        """
+        Функция позволяет спросить пользователя, уверен ли он в том, что хочет закрыть окно
+        """
+        reply = QMessageBox.question(self, 'Message', 'Are you sure to quit?',
+                                     QMessageBox.Yes | QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
 
 def main() -> None:

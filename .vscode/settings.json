@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\ivan\\anaconda3\\python.exe"
+    "python.pythonPath": "C:\\Users\\ivan\\anaconda3\\python.exe",
+    "notebook.output.textLineLimit": 3000
 }

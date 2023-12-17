@@ -6,7 +6,7 @@ from task3 import make_dataset3, make_annotation3
 from task5 import Iterator
 
 from PyQt5.QtCore import Qt, QEvent
-from PyQt5.QtGui import QPainter, QPixmap
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import  *
 
 
